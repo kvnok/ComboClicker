@@ -1,0 +1,36 @@
+/* general */
+body { 
+	font-family: Arial, sans-serif;
+	background-color: #f4f4f4;
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+	width: 100vw;
+}
+
+/* for grid of body */
+body {
+	display: grid;
+	grid-template-columns: repeat(10, 1fr);
+	grid-template-rows: repeat(10, 1fr);
+	grid-column-gap: 0px;
+	grid-row-gap: 0px;
+}
+
+/* game side */
+#top {
+	background-color: aquamarine;
+	grid-area: 1 / 1 / 6 / 11;
+}
+
+/* score side */
+#bottom {
+	background-color: aqua;
+	grid-area: 6 / 1 / 11 / 11;
+}
+
+/* highscore */
+#highscore {
+	background-color: red;
+	grid-area: 1 / 1 / 11 / 11;
+}

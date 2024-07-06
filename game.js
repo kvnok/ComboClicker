@@ -143,7 +143,7 @@ function activateRandomBoxes() {
 		while (randi >= 0 && randi <= gameBoxWidth ||
 			randi >= (gameBoxWidth * (gameBoxHeight - 1)) && randi <= (gameBoxWidth * gameBoxHeight - 1) ||
 			randi % gameBoxWidth === 0 || randi % gameBoxWidth === gameBoxWidth - 1 ||
-			activeBoxes.includes(boxes[randi]) || boxes[randi].style.backgroundColor === 'black'
+			boxes[randi].style.backgroundColor === 'black'
 			|| boxes[randi-1].style.backgroundColor === 'black'
 			|| boxes[randi+1].style.backgroundColor === 'black'
 			|| boxes[randi-cols].style.backgroundColor === 'black'
@@ -191,7 +191,7 @@ function activateRandomBox() {
         const randomRow = Math.floor(Math.random() * (rows - 2)) + 1; // Avoid first and last row
         const randomCol = Math.floor(Math.random() * (cols - 2)) + 1; // Avoid first and last column
         const randi = randomRow * cols + randomCol;
-		while (activeBoxes.includes(boxes[randi]) || boxes[randi].style.backgroundColor === 'black'
+		while (boxes[randi].style.backgroundColor === 'black'
 			|| boxes[randi-1].style.backgroundColor === 'black'
 			|| boxes[randi+1].style.backgroundColor === 'black'
 			|| boxes[randi-cols].style.backgroundColor === 'black'

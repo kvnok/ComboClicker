@@ -25,7 +25,7 @@ body {
 	grid-column: 1 / 2;
 	display: grid;
 	grid-template-rows: repeat(10, 1fr);
-	grid-template-columns: repeat(10, 1fr);
+	grid-template-columns: repeat(20, 1fr);
 }
 
 /* box */

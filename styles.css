@@ -61,13 +61,13 @@ body {
 	grid-row: 5 / 15;
 	grid-column: 5 / 18;
 	height: 100%;
-	color: white;
+	color: black;
 	font-size: 48px;
 	margin-top: -10vh;
 }
 
 #highscore h2 {
-	color: white;
+	color: black;
 	font-size: 72px;
 	margin-top: -5vh;
 }
@@ -78,7 +78,7 @@ body {
 	/* background-color: orange; */
 	grid-row: 2 / 11;
 	grid-column: 41 / 61;
-	color: white;
+	color: black;
 	font-size: 72px;
 	font-weight: bold;
 	text-align: center;
@@ -94,6 +94,6 @@ body {
 	/* background-color: yellow; */
 	grid-row: 12 / 19;
 	grid-column: 41 / 61;
-	color: white;
+	color: black;
 	font-size: 48px;
 }

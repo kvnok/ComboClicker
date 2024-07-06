@@ -22,6 +22,7 @@ const gameBoxWidth = 30; // Example width, adjust as needed
 const gameBoxHeight = 10; // Example height, adjust as needed
 const totalBoxes = gameBoxWidth * gameBoxHeight;
 let initialComboScore = 0; // Initial combo score, adjust as needed
+let highScore = 0; // Variable to keep track of high score
 
 function createGameGrid() {
     const gridContainer = document.getElementById('top');
@@ -75,6 +76,21 @@ function startComboTimer(comboScore) {
 
         if (timeLeft <= 0) {
             timeLeft = 0;
+
+            // Check and update high score
+            if (initialComboScore > highScore) {
+                highScore = initialComboScore;
+                document.querySelector('#highscore h2').textContent = highScore;
+            }
+
+            // Reset score and timer
+            initialComboScore = 0;
+            document.querySelector('#comboText h2').textContent = initialComboScore;
+            updateBackgroundColors(initialComboScore);
+            startComboTimer(initialComboScore);
+            activateRandomBoxes(); // Activate initial set of random boxes
+
+            return; // Exit the timer frame function
         }
 
         updateTimerDisplay(timeLeft);

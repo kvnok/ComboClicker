@@ -1,22 +1,22 @@
 // Simulated CSV content as a string
 const csvContent = `min,max,top,bottom,timer
-0,1,#0000FF,#0000CC,6000
-2,3,#FF0000,#CC0000,5500
-4,5,#FFFF00,#CCCC00,5000
-6,7,#00FF00,#00CC00,4500
-8,9,#FFA500,#CC8400,4000
-10,11,#800080,#660066,3500
-12,13,#A52A2A,#802020,3000
-14,15,#FFC0CB,#CC8085,2500
-16,17,#ADD8E6,#87AFC1,2000
-18,19,#FF7F7F,#CC6666,1500
-20,21,#FFFFE0,#CCCCB3,1000
-22,23,#90EE90,#77CC77,500
-24,25,#FFD700,#CCA300,300
-26,27,#E6E6FA,#B3B3D9,200
-28,29,#CD853F,#A67A3E,100
-30,31,#FFB6C1,#CC8C99,50
-32,9999999,#FFFFFF,#CCCCCC,20`;
+0,49,#0000FF,#0000CC,6000
+50,99,#FF0000,#CC0000,5500
+100,149,#FFFF00,#CCCC00,5000
+150,199,#00FF00,#00CC00,4500
+200,249,#FFA500,#CC8400,4000
+250,299,#800080,#660066,3500
+300,349,#A52A2A,#802020,3000
+350,399,#FFC0CB,#CC8085,2500
+400,449,#ADD8E6,#87AFC1,2000
+450,499,#FF7F7F,#CC6666,1500
+500,549,#FFFFE0,#CCCCB3,1000
+550,599,#90EE90,#77CC77,500
+600,649,#FFD700,#CCA300,300
+650,699,#E6E6FA,#B3B3D9,200
+700,749,#CD853F,#A67A3E,100
+750,799,#FFB6C1,#CC8C99,50
+800,9999999,#FFFFFF,#CCCCCC,20`;
 
 const gameBoxWidth = 30; // Example width, adjust as needed
 const gameBoxHeight = 10; // Example height, adjust as needed
@@ -107,7 +107,7 @@ function startComboTimer(comboScore) {
 
 function updateTimerDisplay(timeLeft) {
     const seconds = Math.max(timeLeft / 1000, 0).toFixed(2);
-    document.querySelector('#comboTimer h2').textContent = `${seconds} seconds`;
+    document.querySelector('#comboTimer h2').textContent = `${seconds}`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {

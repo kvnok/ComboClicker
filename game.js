@@ -20,12 +20,11 @@ const csvContent = `min,max,top,bottom
 
 const gameBoxWidth = 20; // Example width, adjust as needed
 const gameBoxHeight = 10; // Example height, adjust as needed
+const totalBoxes = gameBoxWidth * gameBoxHeight;
 
 function createGameGrid() {
     const gridContainer = document.getElementById('top'); // Targeting the game area
     gridContainer.innerHTML = ''; // Clear existing grid if any
-    const totalBoxes = gameBoxWidth * gameBoxHeight;
-
     for (let i = 0; i < totalBoxes; i++) {
         const box = document.createElement('div');
         box.className = 'box';
@@ -56,73 +55,69 @@ function updateBackgroundColors(comboScore) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const topElement = document.querySelector('#top');
-	let activeBoxes = []; // Now an array to hold two active boxes
-	let boxAmount = 5; // Number of boxes to activate
-	// Initialize the game board
+    let activeBoxes = []; // Array to hold active boxes
+    let boxAmount = 5; // Number of boxes to activate
+
+    // Initialize the game board
 	function initializeGame() {
-		for (let i = 0; i < 100; i++) {
+		const gridContainer = document.getElementById('top');
+		const totalBoxes = gameBoxWidth * gameBoxHeight;
+		gridContainer.innerHTML = ''; // Clear existing grid if any
+		for (let i = 0; i < totalBoxes; i++) {
 			const box = document.createElement('div');
-			box.classList.add('box');
-			topElement.appendChild(box);
+			box.className = 'box';
+			gridContainer.appendChild(box);
 		}
-		activateRandomBoxes(); // Now activating two boxes
+		activateRandomBoxes();
 	}
 
-	// Activate two random boxes
-	function activateRandomBoxes() {
-		const boxes = document.querySelectorAll('#top .box');
-		clearActiveBoxes(); // Clear current active boxes first
-		const gridWidth = 5; // Assuming a grid width of n boxes
-		const selectableBoxesCount = boxes.length - gridWidth; // Exclude the outer right column
+    // Activate random boxes
+    function activateRandomBoxes() {
+        const boxes = document.querySelectorAll('#top .box');
+        clearActiveBoxes();
+        while (activeBoxes.length < boxAmount) {
+            const randomIndex = Math.floor(Math.random() * boxes.length);
+            if (!activeBoxes.includes(boxes[randomIndex])) {
+                boxes[randomIndex].style.backgroundColor = 'black';
+                activeBoxes.push(boxes[randomIndex]);
+            }
+        }
+    }
 
-		while (activeBoxes.length < boxAmount) {
-			// Adjust randomIndex to exclude the outer right boxes
-			const randomIndex = Math.floor(Math.random() * selectableBoxesCount);
-			if (!activeBoxes.includes(boxes[randomIndex])) { // Ensure unique boxes are activated
-				boxes[randomIndex].style.backgroundColor = 'black';
-				activeBoxes.push(boxes[randomIndex]);
-			}
-		}
-	}
+    // Clear the current active boxes
+    function clearActiveBoxes() {
+        activeBoxes.forEach(box => box.style.backgroundColor = '');
+        activeBoxes = [];
+    }
 
-	// Clear the current active boxes
-	function clearActiveBoxes() {
-		activeBoxes.forEach(box => box.style.backgroundColor = ''); // Reset to default or specify a color
-		activeBoxes = []; // Reset the active boxes array
-	}
+    let clickCount = 0;
 
-	let clickCount = 0; // Step 1: Initialize click counter
+    topElement.addEventListener('click', (e) => {
+        if (e.target.style.backgroundColor === 'black') {
+            e.target.style.backgroundColor = '';
+            activeBoxes = activeBoxes.filter(box => box !== e.target);
+            clickCount++;
+            document.querySelector('#comboText h2').textContent = clickCount;
+            if (activeBoxes.length < boxAmount) {
+                activateRandomBox();
+            }
+        }
+    });
 
-	// Assuming the existing event listener for box clicks
-	topElement.addEventListener('click', (e) => {
-		if (e.target.style.backgroundColor === 'black') {
-			e.target.style.backgroundColor = ''; // Reset clicked box
-			activeBoxes = activeBoxes.filter(box => box !== e.target); // Remove clicked box from activeBoxes
+    let lastActivatedBox = null;
 
-			clickCount++; // Step 2: Increment click counter
-			document.querySelector('#comboText h2').textContent = clickCount; // Step 3: Update comboText display
-			updateBackgroundColors(clickCount); // Step 4: Update background colors based on combo score
-			// Activate new box if less than two are active
-			if (activeBoxes.length < boxAmount) {
-				activateRandomBox();
-			}
-		}
-	});
-
-	let lastActivatedBox = null; // Track the last activated box
-
-	function activateRandomBox() {
-		const boxes = document.querySelectorAll('#top .box');
-		let boxActivated = false;
-		while (!boxActivated) {
-			const randomIndex = Math.floor(Math.random() * boxes.length);
-			if (!activeBoxes.includes(boxes[randomIndex]) && boxes[randomIndex] !== lastActivatedBox) {
-				boxes[randomIndex].style.backgroundColor = 'black';
-				activeBoxes.push(boxes[randomIndex]);
-				lastActivatedBox = boxes[randomIndex]; // Update the last activated box
-				boxActivated = true;
-			}
-		}
-	};
-	initializeGame();
+    function activateRandomBox() {
+        const boxes = document.querySelectorAll('#top .box');
+        let boxActivated = false;
+        while (!boxActivated) {
+            const randomIndex = Math.floor(Math.random() * boxes.length);
+            if (!activeBoxes.includes(boxes[randomIndex]) && boxes[randomIndex] !== lastActivatedBox) {
+                boxes[randomIndex].style.backgroundColor = 'black';
+                activeBoxes.push(boxes[randomIndex]);
+                lastActivatedBox = boxes[randomIndex];
+                boxActivated = true;
+            }
+        }
+    };
+    initializeGame();
 });

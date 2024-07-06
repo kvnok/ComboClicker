@@ -134,12 +134,17 @@ function initializeGame() {
     activateRandomBoxes(); // Activate initial set of random boxes
 }
 
-// Activate random boxes
 function activateRandomBoxes() {
     const boxes = document.querySelectorAll('#top .box');
     clearActiveBoxes();
     while (activeBoxes.length < boxAmount) {
-        const randomIndex = Math.floor(Math.random() * boxes.length);
+        let randomIndex = Math.floor(Math.random() * boxes.length);
+		while (randomIndex >= 0 && randomIndex <= gameBoxWidth ||
+			randomIndex >= (gameBoxWidth * (gameBoxHeight - 1)) && randomIndex <= (gameBoxWidth * gameBoxHeight - 1) ||
+			randomIndex % gameBoxWidth === 0 || randomIndex % gameBoxWidth === gameBoxWidth - 1
+		) {
+			randomIndex = Math.floor(Math.random() * boxes.length);
+		}
         if (!activeBoxes.includes(boxes[randomIndex])) {
             boxes[randomIndex].style.backgroundColor = 'black';
             activeBoxes.push(boxes[randomIndex]);
@@ -177,10 +182,17 @@ topElement.addEventListener('click', (e) => {
 
 function activateRandomBox() {
     const boxes = document.querySelectorAll('#top .box');
+    const rows = gameBoxHeight;
+    const cols = gameBoxWidth
     let boxActivated = false;
+
     while (!boxActivated) {
-        const randomIndex = Math.floor(Math.random() * boxes.length);
-        if (!activeBoxes.includes(boxes[randomIndex]) && boxes[randomIndex].style.backgroundColor !== 'black') {
+        const randomRow = Math.floor(Math.random() * (rows - 2)) + 1; // Avoid first and last row
+        const randomCol = Math.floor(Math.random() * (cols - 2)) + 1; // Avoid first and last column
+        const randomIndex = randomRow * cols + randomCol; // Calculate index based on row and column
+
+        if (!activeBoxes.includes(boxes[randomIndex])
+            && boxes[randomIndex].style.backgroundColor !== 'black') {
             boxes[randomIndex].style.backgroundColor = 'black';
             activeBoxes.push(boxes[randomIndex]);
             boxActivated = true;

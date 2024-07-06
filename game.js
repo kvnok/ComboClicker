@@ -60,7 +60,7 @@ function startComboTimer(comboScore) {
     const currentRange = colorRanges.find(range => comboScore >= range.min && comboScore <= range.max);
     if (!currentRange) return; // If no range is found, exit the function
 
-    // Initialize timeLeft with the total time from the current range
+    // Initialize or reset timeLeft with the total time from the current range
     let timeLeft = parseInt(currentRange.totaltime, 10); // Assuming totaltime is in milliseconds
 
     // Clear any existing timer to prevent multiple timers running
@@ -68,23 +68,24 @@ function startComboTimer(comboScore) {
 
     // Update UI with initial timeLeft
     updateTimerDisplay(timeLeft);
-
-    // Start the countDown
+	console.log(timeLeft);
+    // Start or restart the countDown
     countDown = setInterval(() => {
         timeLeft -= 10; // Decrease time left by 10ms
         updateTimerDisplay(timeLeft); // Update UI with new timeLeft
 
+        // Instead of stopping the timer, reset timeLeft based on comboScore
         if (timeLeft <= 0) {
-            clearInterval(countDown); // Stop the countDown when time is up
-            // Optional: Reset the game or perform other actions when the timer ends
-			
+            const newRange = colorRanges.find(range => comboScore >= range.min && comboScore <= range.max);
+            timeLeft = newRange ? parseInt(newRange.totaltime, 10) : timeLeft; // Reset timeLeft or keep it as is if no range is found
+            // Optionally, perform other actions when the timer would normally end
         }
     }, 10); // Set interval to 10 milliseconds
 }
 
 function updateTimerDisplay(timeLeft) {
     // Convert timeLeft from milliseconds to seconds with two decimal places
-    const seconds = Math.max(timeLeft / 1000, 0).toFixed(2);
+    const seconds = Math.max(timeLeft / 1000, 0).toFixed(4);
     // Update the comboTimer element with the new timeLeft
     document.querySelector('#comboTimer h2').textContent = seconds + ' seconds';
 }
@@ -137,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (activeBoxes.length < boxAmount) {
                 activateRandomBox();
             }
+			startComboTimer(clickCount);
         }
     });
 

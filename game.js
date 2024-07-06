@@ -25,6 +25,7 @@ let initialComboScore = 0; // Initial combo score, adjust as needed
 let highScore = 0; // Variable to keep track of high score
 let gameStarted = false; // Flag to track if the game has started
 
+
 function createGameGrid() {
     const gridContainer = document.getElementById('top');
     gridContainer.innerHTML = '';
@@ -58,11 +59,13 @@ function updateBackgroundColors(comboScore) {
 let lastFrameTime = null; // Track the last frame time for requestAnimationFrame
 let timerId = null; // Track the current timer
 
+let timeLeft = 0; // Time left in the timer
+
 function startComboTimer(comboScore) {
     const currentRange = colorRanges.find(range => comboScore >= range.min && comboScore <= range.max);
     if (!currentRange) return;
 
-    let timeLeft = parseInt(currentRange.totaltime, 10);
+    timeLeft = parseInt(currentRange.totaltime, 10);
 
     if (timerId) {
         cancelAnimationFrame(timerId); // Cancel any existing timer
@@ -152,6 +155,8 @@ let boxAmount = 5; // Number of boxes to activate
 const topElement = document.querySelector('#top');
 topElement.addEventListener('click', (e) => {
     if (e.target.style.backgroundColor === 'black') {
+		const currentRange = colorRanges.find(range => initialComboScore >= range.min && initialComboScore <= range.max);
+		timeLeft = parseInt(currentRange.totaltime, 10); // Reset the timer
         e.target.style.backgroundColor = '';
         activeBoxes = activeBoxes.filter(box => box !== e.target);
         initialComboScore++;

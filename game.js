@@ -175,13 +175,15 @@ topElement.addEventListener('click', (e) => {
 		const currentRange = colorRanges.find(range => initialComboScore >= range.min && initialComboScore <= range.max);
 		timeLeft = parseInt(currentRange.totaltime, 10); // Reset the timer
         e.target.style.backgroundColor = '';
-        activeBoxes = activeBoxes.filter(box => box !== e.target);
+        const boxesArray = Array.from(document.querySelectorAll('.box'));
+		const clickedBoxIndex = boxesArray.indexOf(e.target);
+		activeBoxes = activeBoxes.filter(box => box !== e.target);
         initialComboScore++;
         document.querySelector('#comboText h2').textContent = initialComboScore;
         updateBackgroundColors(initialComboScore); // Update background colors on score change
         if (activeBoxes.length < boxAmount) {
 			remove_old_active_boxes();
-            activateRandomBox();
+            activateRandomBox(clickedBoxIndex);
         }
         if (!gameStarted) {
             gameStarted = true;
@@ -190,7 +192,7 @@ topElement.addEventListener('click', (e) => {
     }
 });
 
-function activateRandomBox() {
+function activateRandomBox(clickedIndex) {
 	const boxes = document.querySelectorAll('#top .box');
 	if (boxes.length === 0) return; // Ensure there are boxes to activate
 
@@ -215,7 +217,7 @@ function activateRandomBox() {
 				boxes[randi+cols]?.style.backgroundColor === 'black' ||
 				randi >= 0 && randi <= cols ||
 				randi >= (cols * (rows - 1)) && randi <= (cols * rows - 1) ||
-				randi % cols === 0 || randi % cols === cols - 1
+				randi % cols === 0 || randi % cols === cols - 1 || randi === clickedIndex
 			)
 		) {
 			randi = Math.floor(Math.random() * boxes.length);

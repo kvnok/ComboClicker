@@ -43,41 +43,57 @@ body {
 	display: grid;
 	grid-template-rows: repeat(20, 1fr);
 	grid-template-columns: repeat(100, 1fr);
+	min-height: 30vh;
+	overflow: hidden;
 }
 
 /* info borders */
 #highscore, #comboText, #comboTimer {
-	border: 5px solid white;
-	border-radius: 5%;
+	/* border: 5px solid white; */
+	/* border-radius: 5%; */
 	text-align: center;
+	/* overflow: hidden; */
 }
 
 /* highscore */
 #highscore {
-	background-color: red;
+	/* background-color: red; */
 	grid-row: 5 / 15;
 	grid-column: 5 / 18;
 	height: 100%;
-	font-size: 24px;
+	color: white;
+	font-size: 48px;
+	margin-top: -10vh;
+}
+
+#highscore h2 {
+	color: white;
+	font-size: 72px;
+	margin-top: -5vh;
 }
 
 /* combo text */
 #comboText {
-	background-color: orange;
+	margin-top: -9vh;
+	/* background-color: orange; */
 	grid-row: 2 / 11;
 	grid-column: 41 / 61;
 	color: white;
-	font-size: 24px;
+	font-size: 72px;
 	font-weight: bold;
 	text-align: center;
 	padding: 10px;
 	border-radius: 10px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	/* box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); */
+	/* overflow: hidden; */
 }
 
 /* combo timer */
 #comboTimer {
-	background-color: yellow;
+	margin-top: -6vh;
+	/* background-color: yellow; */
 	grid-row: 12 / 19;
 	grid-column: 41 / 61;
+	color: white;
+	font-size: 48px;
 }

@@ -13,7 +13,7 @@ body {
 /* for grid of body */
 body {
 	display: grid;
-	grid-template-rows: 8fr 1fr;
+	grid-template-rows: 9fr 1fr;
 	grid-column-gap: 0px;
 	grid-row-gap: 0px;
 }
@@ -45,23 +45,16 @@ body {
 	grid-column: 5 / 18;
 }
 
-/* general combo */
-#combo {
-	background-color: red;
-	grid-row: 1 / 21;
-	grid-column: 38 / 64;
-}
-
 /* combo text */
 #comboText {
 	background-color: orange;
-	grid-row: 2 / 9;
+	grid-row: 2 / 11;
 	grid-column: 41 / 61;
 }
 
 /* combo timer */
 #comboTimer {
 	background-color: yellow;
-	grid-row: 10 / 19;
+	grid-row: 12 / 19;
 	grid-column: 41 / 61;
 }

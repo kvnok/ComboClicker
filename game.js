@@ -18,7 +18,7 @@ const csvContent = `min,max,top,bottom,timer
 30,31,#FFB6C1,#CC8C99,50
 32,9999999,#FFFFFF,#CCCCCC,20`;
 
-const gameBoxWidth = 20; // Example width, adjust as needed
+const gameBoxWidth = 30; // Example width, adjust as needed
 const gameBoxHeight = 10; // Example height, adjust as needed
 const totalBoxes = gameBoxWidth * gameBoxHeight;
 
@@ -40,8 +40,8 @@ createGameGrid();
 
 // Parse the CSV content
 const colorRanges = csvContent.split('\n').slice(1).map(line => {
-    const [min, max, top, bottom] = line.split(',');
-    return { min: parseInt(min, 10), max: parseInt(max, 10), top, bottom };
+    const [min, max, top, bottom, totaltime] = line.split(',');
+    return { min: parseInt(min, 10), max: parseInt(max, 10), top, bottom, totaltime };
 });
 
 function updateBackgroundColors(comboScore) {
@@ -51,6 +51,42 @@ function updateBackgroundColors(comboScore) {
         document.querySelector('#top').style.backgroundColor = currentRange.top;
         document.querySelector('#bottom').style.backgroundColor = currentRange.bottom;
     }
+}
+
+let countDown;
+
+function startComboTimer(comboScore) {
+    // Find the current range based on comboScore
+    const currentRange = colorRanges.find(range => comboScore >= range.min && comboScore <= range.max);
+    if (!currentRange) return; // If no range is found, exit the function
+
+    // Initialize timeLeft with the total time from the current range
+    let timeLeft = parseInt(currentRange.totaltime, 10); // Assuming totaltime is in milliseconds
+
+    // Clear any existing timer to prevent multiple timers running
+    clearInterval(countDown); // Fix the variable name to be consistent
+
+    // Update UI with initial timeLeft
+    updateTimerDisplay(timeLeft);
+
+    // Start the countDown
+    countDown = setInterval(() => {
+        timeLeft -= 10; // Decrease time left by 10ms
+        updateTimerDisplay(timeLeft); // Update UI with new timeLeft
+
+        if (timeLeft <= 0) {
+            clearInterval(countDown); // Stop the countDown when time is up
+            // Optional: Reset the game or perform other actions when the timer ends
+			
+        }
+    }, 10); // Set interval to 10 milliseconds
+}
+
+function updateTimerDisplay(timeLeft) {
+    // Convert timeLeft from milliseconds to seconds with two decimal places
+    const seconds = Math.max(timeLeft / 1000, 0).toFixed(2);
+    // Update the comboTimer element with the new timeLeft
+    document.querySelector('#comboTimer h2').textContent = seconds + ' seconds';
 }
 
 document.addEventListener('DOMContentLoaded', () => {

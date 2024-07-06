@@ -24,7 +24,8 @@ const totalBoxes = gameBoxWidth * gameBoxHeight;
 let initialComboScore = 0; // Initial combo score, adjust as needed
 let highScore = 0; // Variable to keep track of high score
 let gameStarted = false; // Flag to track if the game has started
-
+let activeBoxes = []; // Array to hold active boxes
+let boxAmount = 5; // Number of boxes to activate
 
 function createGameGrid() {
     const gridContainer = document.getElementById('top');
@@ -141,14 +142,13 @@ function activateRandomBoxes() {
         let randomIndex = Math.floor(Math.random() * boxes.length);
 		while (randomIndex >= 0 && randomIndex <= gameBoxWidth ||
 			randomIndex >= (gameBoxWidth * (gameBoxHeight - 1)) && randomIndex <= (gameBoxWidth * gameBoxHeight - 1) ||
-			randomIndex % gameBoxWidth === 0 || randomIndex % gameBoxWidth === gameBoxWidth - 1
+			randomIndex % gameBoxWidth === 0 || randomIndex % gameBoxWidth === gameBoxWidth - 1 ||
+			activeBoxes.includes(boxes[randomIndex]) || boxes[randomIndex].style.backgroundColor === 'black'
 		) {
 			randomIndex = Math.floor(Math.random() * boxes.length);
 		}
-        if (!activeBoxes.includes(boxes[randomIndex])) {
-            boxes[randomIndex].style.backgroundColor = 'black';
-            activeBoxes.push(boxes[randomIndex]);
-        }
+		boxes[randomIndex].style.backgroundColor = 'black';
+		activeBoxes.push(boxes[randomIndex]);
     }
 }
 
@@ -156,9 +156,6 @@ function clearActiveBoxes() {
     activeBoxes.forEach(box => box.style.backgroundColor = '');
     activeBoxes = [];
 }
-
-let activeBoxes = []; // Array to hold active boxes
-let boxAmount = 5; // Number of boxes to activate
 
 const topElement = document.querySelector('#top');
 topElement.addEventListener('click', (e) => {
@@ -189,13 +186,13 @@ function activateRandomBox() {
     while (!boxActivated) {
         const randomRow = Math.floor(Math.random() * (rows - 2)) + 1; // Avoid first and last row
         const randomCol = Math.floor(Math.random() * (cols - 2)) + 1; // Avoid first and last column
-        const randomIndex = randomRow * cols + randomCol; // Calculate index based on row and column
-
-        if (!activeBoxes.includes(boxes[randomIndex])
-            && boxes[randomIndex].style.backgroundColor !== 'black') {
-            boxes[randomIndex].style.backgroundColor = 'black';
-            activeBoxes.push(boxes[randomIndex]);
-            boxActivated = true;
-        }
+        const randomIndex = randomRow * cols + randomCol;
+		while (activeBoxes.includes(boxes[randomIndex]) || boxes[randomIndex].style.backgroundColor === 'black'
+		) {
+			randomIndex = Math.floor(Math.random() * boxes.length);
+		}
+		boxes[randomIndex].style.backgroundColor = 'black';
+		activeBoxes.push(boxes[randomIndex]);
+		boxActivated = true;
     }
 }

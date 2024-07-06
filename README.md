@@ -1,8 +1,13 @@
 # ComboClicker
-A game all about getting the highest consecutive score. \
-You score points by clicking the black boxes. \
-Below the score is a timer, when the timer runs out you lose. \
-The bigger your score gets the faster the timer goes. \
-There are score thresholds inplace for viewing new color themes. \
-Try to beat your highscore and view all the color combos! \
-[<span style="font-size: 48px;">Click here to play ComboClicker!</span>](https://kvnok.github.io/ComboClicker/)
+
+ComboClicker is an engaging game where your goal is to achieve the highest consecutive score possible.
+
+## How to Play
+- Click the black boxes to score points.
+- A timer below the score indicates how much time you have left before the game ends.
+- As your score increases, the timer speeds up, adding to the challenge.
+- Reach score thresholds to unlock new color themes.
+- Try to beat your high score and discover all the available color combos!
+
+## Play Now
+## [Play ComboClicker](https://kvnok.github.io/ComboClicker/)

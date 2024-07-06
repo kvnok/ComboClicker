@@ -23,6 +23,7 @@ const gameBoxHeight = 10; // Example height, adjust as needed
 const totalBoxes = gameBoxWidth * gameBoxHeight;
 let initialComboScore = 0; // Initial combo score, adjust as needed
 let highScore = 0; // Variable to keep track of high score
+let gameStarted = false; // Flag to track if the game has started
 
 function createGameGrid() {
     const gridContainer = document.getElementById('top');
@@ -87,7 +88,7 @@ function startComboTimer(comboScore) {
             initialComboScore = 0;
             document.querySelector('#comboText h2').textContent = initialComboScore;
             updateBackgroundColors(initialComboScore);
-            startComboTimer(initialComboScore);
+            gameStarted = false; // Reset the game start flag
             activateRandomBoxes(); // Activate initial set of random boxes
 
             return; // Exit the timer frame function
@@ -124,7 +125,6 @@ function initializeGame() {
         box.className = 'box';
         gridContainer.appendChild(box);
     }
-    startComboTimer(initialComboScore);
     activateRandomBoxes(); // Activate initial set of random boxes
 }
 
@@ -160,7 +160,10 @@ topElement.addEventListener('click', (e) => {
         if (activeBoxes.length < boxAmount) {
             activateRandomBox();
         }
-        startComboTimer(initialComboScore);
+        if (!gameStarted) {
+            gameStarted = true;
+            startComboTimer(initialComboScore);
+        }
     }
 });
 

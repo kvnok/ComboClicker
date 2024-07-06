@@ -137,18 +137,23 @@ function initializeGame() {
 
 function activateRandomBoxes() {
     const boxes = document.querySelectorAll('#top .box');
+	const cols = gameBoxWidth;
     clearActiveBoxes();
     while (activeBoxes.length < boxAmount) {
-        let randomIndex = Math.floor(Math.random() * boxes.length);
-		while (randomIndex >= 0 && randomIndex <= gameBoxWidth ||
-			randomIndex >= (gameBoxWidth * (gameBoxHeight - 1)) && randomIndex <= (gameBoxWidth * gameBoxHeight - 1) ||
-			randomIndex % gameBoxWidth === 0 || randomIndex % gameBoxWidth === gameBoxWidth - 1 ||
-			activeBoxes.includes(boxes[randomIndex]) || boxes[randomIndex].style.backgroundColor === 'black'
+        let randi = Math.floor(Math.random() * boxes.length);
+		while (randi >= 0 && randi <= gameBoxWidth ||
+			randi >= (gameBoxWidth * (gameBoxHeight - 1)) && randi <= (gameBoxWidth * gameBoxHeight - 1) ||
+			randi % gameBoxWidth === 0 || randi % gameBoxWidth === gameBoxWidth - 1 ||
+			activeBoxes.includes(boxes[randi]) || boxes[randi].style.backgroundColor === 'black'
+			|| boxes[randi-1].style.backgroundColor === 'black'
+			|| boxes[randi+1].style.backgroundColor === 'black'
+			|| boxes[randi-cols].style.backgroundColor === 'black'
+			|| boxes[randi+cols].style.backgroundColor === 'black'
 		) {
-			randomIndex = Math.floor(Math.random() * boxes.length);
+			randi = Math.floor(Math.random() * boxes.length);
 		}
-		boxes[randomIndex].style.backgroundColor = 'black';
-		activeBoxes.push(boxes[randomIndex]);
+		boxes[randi].style.backgroundColor = 'black';
+		activeBoxes.push(boxes[randi]);
     }
 }
 
@@ -186,13 +191,17 @@ function activateRandomBox() {
     while (!boxActivated) {
         const randomRow = Math.floor(Math.random() * (rows - 2)) + 1; // Avoid first and last row
         const randomCol = Math.floor(Math.random() * (cols - 2)) + 1; // Avoid first and last column
-        const randomIndex = randomRow * cols + randomCol;
-		while (activeBoxes.includes(boxes[randomIndex]) || boxes[randomIndex].style.backgroundColor === 'black'
+        const randi = randomRow * cols + randomCol;
+		while (activeBoxes.includes(boxes[randi]) || boxes[randi].style.backgroundColor === 'black'
+			|| boxes[randi-1].style.backgroundColor === 'black'
+			|| boxes[randi+1].style.backgroundColor === 'black'
+			|| boxes[randi-cols].style.backgroundColor === 'black'
+			|| boxes[randi+cols].style.backgroundColor === 'black'
 		) {
-			randomIndex = Math.floor(Math.random() * boxes.length);
+			randi = Math.floor(Math.random() * boxes.length);
 		}
-		boxes[randomIndex].style.backgroundColor = 'black';
-		activeBoxes.push(boxes[randomIndex]);
+		boxes[randi].style.backgroundColor = 'black';
+		activeBoxes.push(boxes[randi]);
 		boxActivated = true;
     }
 }

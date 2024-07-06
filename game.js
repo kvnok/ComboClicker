@@ -53,41 +53,41 @@ function updateBackgroundColors(comboScore) {
     }
 }
 
-let countDown;
+let lastFrameTime = 0; // Track the last frame time for requestAnimationFrame
 
 function startComboTimer(comboScore) {
-    // Find the current range based on comboScore
     const currentRange = colorRanges.find(range => comboScore >= range.min && comboScore <= range.max);
     if (!currentRange) return; // If no range is found, exit the function
 
-    // Initialize or reset timeLeft with the total time from the current range
     let timeLeft = parseInt(currentRange.totaltime, 10); // Assuming totaltime is in milliseconds
 
-    // Clear any existing timer to prevent multiple timers running
-    clearInterval(countDown); // Fix the variable name to be consistent
+    function timerFrame(currentTime) {
+        if (!lastFrameTime) lastFrameTime = currentTime; // Initialize lastFrameTime during the first frame
+        const deltaTime = currentTime - lastFrameTime; // Calculate the time difference in milliseconds
 
-    // Update UI with initial timeLeft
-    updateTimerDisplay(timeLeft);
-	console.log(timeLeft);
-    // Start or restart the countDown
-    countDown = setInterval(() => {
-        timeLeft -= 10; // Decrease time left by 10ms
-        updateTimerDisplay(timeLeft); // Update UI with new timeLeft
+        timeLeft -= deltaTime; // Decrease timeLeft by the elapsed time since the last frame
 
-        // Instead of stopping the timer, reset timeLeft based on comboScore
         if (timeLeft <= 0) {
             const newRange = colorRanges.find(range => comboScore >= range.min && comboScore <= range.max);
-            timeLeft = newRange ? parseInt(newRange.totaltime, 10) : timeLeft; // Reset timeLeft or keep it as is if no range is found
+            timeLeft = newRange ? parseInt(newRange.totaltime, 10) : 0; // Reset timeLeft or end the timer
             // Optionally, perform other actions when the timer would normally end
         }
-    }, 10); // Set interval to 10 milliseconds
+
+        updateTimerDisplay(timeLeft); // Update UI with new timeLeft
+
+        lastFrameTime = currentTime; // Update lastFrameTime to the current time
+
+        if (timeLeft > 0) {
+            requestAnimationFrame(timerFrame); // Request the next frame
+        }
+    }
+
+    requestAnimationFrame(timerFrame); // Start the animation frame loop
 }
 
 function updateTimerDisplay(timeLeft) {
-    // Convert timeLeft from milliseconds to seconds with two decimal places
-    const seconds = Math.max(timeLeft / 1000, 0).toFixed(4);
-    // Update the comboTimer element with the new timeLeft
-    document.querySelector('#comboTimer h2').textContent = seconds + ' seconds';
+    const seconds = Math.max(timeLeft / 1000, 0).toFixed(2); // Convert timeLeft from milliseconds to seconds with two decimal places
+    document.querySelector('#comboTimer h2').textContent = `${seconds} seconds`; // Update the comboTimer element with the new timeLeft
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -96,17 +96,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let boxAmount = 5; // Number of boxes to activate
 
     // Initialize the game board
-	function initializeGame() {
-		const gridContainer = document.getElementById('top');
-		const totalBoxes = gameBoxWidth * gameBoxHeight;
-		gridContainer.innerHTML = ''; // Clear existing grid if any
-		for (let i = 0; i < totalBoxes; i++) {
-			const box = document.createElement('div');
-			box.className = 'box';
-			gridContainer.appendChild(box);
-		}
-		activateRandomBoxes();
-	}
+    function initializeGame() {
+        const gridContainer = document.getElementById('top');
+        const totalBoxes = gameBoxWidth * gameBoxHeight;
+        gridContainer.innerHTML = ''; // Clear existing grid if any
+        for (let i = 0; i < totalBoxes; i++) {
+            const box = document.createElement('div');
+            box.className = 'box';
+            // Assuming box click event is set up here or elsewhere
+        }
+        // Start the combo timer with an initial score, adjust as needed
+        startComboTimer(initialComboScore); // Ensure this is called to start the timer
+    }
 
     // Activate random boxes
     function activateRandomBoxes() {

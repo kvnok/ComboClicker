@@ -109,8 +109,11 @@ function startComboTimer(comboScore) {
 }
 
 function updateTimerDisplay(timeLeft) {
-    const seconds = Math.max(timeLeft / 1000, 0).toFixed(2);
-    document.querySelector('#comboTimer h2').textContent = `${seconds}`;
+    // const seconds = Math.max(timeLeft / 1000, 0).toFixed(2);
+    // document.querySelector('#comboTimer h2').textContent = `${seconds}`;
+	const totalTime = parseInt(colorRanges.find(range => initialComboScore >= range.min && initialComboScore <= range.max).totaltime, 10);
+    const percentageLeft = (timeLeft / totalTime) * 100;
+    document.querySelector('.progress-bar').style.width = `${percentageLeft}%`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {

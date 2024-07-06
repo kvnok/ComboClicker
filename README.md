@@ -9,5 +9,5 @@ ComboClicker is an engaging game where your goal is to achieve the highest conse
 - Reach score thresholds to unlock new color themes.
 - Try to beat your high score and discover all the available color combos!
 
-## Play Now
-## [Play ComboClicker](https://kvnok.github.io/ComboClicker/)
+# [**Play ComboClicker**](https://kvnok.github.io/ComboClicker/)
+![ComboClicker Gameplay](https://i.imgur.com/B5dhmZs.gif)

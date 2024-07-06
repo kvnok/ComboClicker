@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const topElement = document.querySelector('#top');
 	let activeBoxes = []; // Now an array to hold two active boxes
-
+	let boxAmount = 5; // Number of boxes to activate
 	// Initialize the game board
 	function initializeGame() {
 		for (let i = 0; i < 100; i++) { // Assuming a 10x10 grid
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function activateRandomBoxes() {
 		const boxes = document.querySelectorAll('#top .box');
 		clearActiveBoxes(); // Clear current active boxes first
-		while (activeBoxes.length < 5) {
+		while (activeBoxes.length < boxAmount) {
 			const randomIndex = Math.floor(Math.random() * boxes.length);
 			if (!activeBoxes.includes(boxes[randomIndex])) { // Ensure unique boxes are activated
 				boxes[randomIndex].style.backgroundColor = 'black';
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			document.querySelector('#comboText h2').textContent = clickCount; // Step 3: Update comboText display
 
 			// Activate new box if less than two are active
-			if (activeBoxes.length < 5) {
+			if (activeBoxes.length < boxAmount) {
 				activateRandomBox();
 			}
 		}

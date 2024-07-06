@@ -21,17 +21,17 @@ const csvContent = `min,max,top,bottom,timer
 const gameBoxWidth = 30; // Example width, adjust as needed
 const gameBoxHeight = 10; // Example height, adjust as needed
 const totalBoxes = gameBoxWidth * gameBoxHeight;
+let initialComboScore = 0; // Initial combo score, adjust as needed
 
 function createGameGrid() {
-    const gridContainer = document.getElementById('top'); // Targeting the game area
-    gridContainer.innerHTML = ''; // Clear existing grid if any
+    const gridContainer = document.getElementById('top');
+    gridContainer.innerHTML = '';
     for (let i = 0; i < totalBoxes; i++) {
         const box = document.createElement('div');
         box.className = 'box';
         gridContainer.appendChild(box);
     }
 
-    // Adjust grid dimensions based on gameBoxWidth and gameBoxHeight
     gridContainer.style.gridTemplateColumns = `repeat(${gameBoxWidth}, 1fr)`;
     gridContainer.style.gridTemplateRows = `repeat(${gameBoxHeight}, 1fr)`;
 }
@@ -53,110 +53,110 @@ function updateBackgroundColors(comboScore) {
     }
 }
 
-let lastFrameTime = 0; // Track the last frame time for requestAnimationFrame
+let lastFrameTime = null; // Track the last frame time for requestAnimationFrame
+let timerId = null; // Track the current timer
 
 function startComboTimer(comboScore) {
     const currentRange = colorRanges.find(range => comboScore >= range.min && comboScore <= range.max);
-    if (!currentRange) return; // If no range is found, exit the function
+    if (!currentRange) return;
 
-    let timeLeft = parseInt(currentRange.totaltime, 10); // Assuming totaltime is in milliseconds
+    let timeLeft = parseInt(currentRange.totaltime, 10);
+
+    if (timerId) {
+        cancelAnimationFrame(timerId); // Cancel any existing timer
+    }
+    lastFrameTime = null; // Reset last frame time
 
     function timerFrame(currentTime) {
-        if (!lastFrameTime) lastFrameTime = currentTime; // Initialize lastFrameTime during the first frame
-        const deltaTime = currentTime - lastFrameTime; // Calculate the time difference in milliseconds
+        if (!lastFrameTime) lastFrameTime = currentTime;
+        const deltaTime = currentTime - lastFrameTime;
 
-        timeLeft -= deltaTime; // Decrease timeLeft by the elapsed time since the last frame
+        timeLeft -= deltaTime;
 
         if (timeLeft <= 0) {
-            const newRange = colorRanges.find(range => comboScore >= range.min && comboScore <= range.max);
-            timeLeft = newRange ? parseInt(newRange.totaltime, 10) : 0; // Reset timeLeft or end the timer
-            // Optionally, perform other actions when the timer would normally end
+            timeLeft = 0;
         }
 
-        updateTimerDisplay(timeLeft); // Update UI with new timeLeft
-
-        lastFrameTime = currentTime; // Update lastFrameTime to the current time
+        updateTimerDisplay(timeLeft);
+        lastFrameTime = currentTime;
 
         if (timeLeft > 0) {
-            requestAnimationFrame(timerFrame); // Request the next frame
+            timerId = requestAnimationFrame(timerFrame);
         }
     }
 
-    requestAnimationFrame(timerFrame); // Start the animation frame loop
+    timerId = requestAnimationFrame(timerFrame);
 }
 
 function updateTimerDisplay(timeLeft) {
-    const seconds = Math.max(timeLeft / 1000, 0).toFixed(2); // Convert timeLeft from milliseconds to seconds with two decimal places
-    document.querySelector('#comboTimer h2').textContent = `${seconds} seconds`; // Update the comboTimer element with the new timeLeft
+    const seconds = Math.max(timeLeft / 1000, 0).toFixed(2);
+    document.querySelector('#comboTimer h2').textContent = `${seconds} seconds`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const topElement = document.querySelector('#top');
-    let activeBoxes = []; // Array to hold active boxes
-    let boxAmount = 5; // Number of boxes to activate
-
-    // Initialize the game board
-    function initializeGame() {
-        const gridContainer = document.getElementById('top');
-        const totalBoxes = gameBoxWidth * gameBoxHeight;
-        gridContainer.innerHTML = ''; // Clear existing grid if any
-        for (let i = 0; i < totalBoxes; i++) {
-            const box = document.createElement('div');
-            box.className = 'box';
-            // Assuming box click event is set up here or elsewhere
-        }
-        // Start the combo timer with an initial score, adjust as needed
-        startComboTimer(initialComboScore); // Ensure this is called to start the timer
-    }
-
-    // Activate random boxes
-    function activateRandomBoxes() {
-        const boxes = document.querySelectorAll('#top .box');
-        clearActiveBoxes();
-        while (activeBoxes.length < boxAmount) {
-            const randomIndex = Math.floor(Math.random() * boxes.length);
-            if (!activeBoxes.includes(boxes[randomIndex])) {
-                boxes[randomIndex].style.backgroundColor = 'black';
-                activeBoxes.push(boxes[randomIndex]);
-            }
-        }
-    }
-
-    // Clear the current active boxes
-    function clearActiveBoxes() {
-        activeBoxes.forEach(box => box.style.backgroundColor = '');
-        activeBoxes = [];
-    }
-
-    let clickCount = 0;
-
-    topElement.addEventListener('click', (e) => {
-        if (e.target.style.backgroundColor === 'black') {
-            e.target.style.backgroundColor = '';
-            activeBoxes = activeBoxes.filter(box => box !== e.target);
-            clickCount++;
-            document.querySelector('#comboText h2').textContent = clickCount;
-            if (activeBoxes.length < boxAmount) {
-                activateRandomBox();
-            }
-			startComboTimer(clickCount);
-        }
-    });
-
-    let lastActivatedBox = null;
-
-    function activateRandomBox() {
-        const boxes = document.querySelectorAll('#top .box');
-        let boxActivated = false;
-        while (!boxActivated) {
-            const randomIndex = Math.floor(Math.random() * boxes.length);
-            if (!activeBoxes.includes(boxes[randomIndex]) && boxes[randomIndex] !== lastActivatedBox) {
-                boxes[randomIndex].style.backgroundColor = 'black';
-                activeBoxes.push(boxes[randomIndex]);
-                lastActivatedBox = boxes[randomIndex];
-                boxActivated = true;
-            }
-        }
-    };
+    createGameGrid();
     initializeGame();
+    updateBackgroundColors(initialComboScore); // Initial background color update
 });
+
+function initializeGame() {
+    const gridContainer = document.getElementById('top');
+    const totalBoxes = gameBoxWidth * gameBoxHeight;
+    gridContainer.innerHTML = '';
+    for (let i = 0; i < totalBoxes; i++) {
+        const box = document.createElement('div');
+        box.className = 'box';
+        gridContainer.appendChild(box);
+    }
+    startComboTimer(initialComboScore);
+    activateRandomBoxes(); // Activate initial set of random boxes
+}
+
+// Activate random boxes
+function activateRandomBoxes() {
+    const boxes = document.querySelectorAll('#top .box');
+    clearActiveBoxes();
+    while (activeBoxes.length < boxAmount) {
+        const randomIndex = Math.floor(Math.random() * boxes.length);
+        if (!activeBoxes.includes(boxes[randomIndex])) {
+            boxes[randomIndex].style.backgroundColor = 'black';
+            activeBoxes.push(boxes[randomIndex]);
+        }
+    }
+}
+
+function clearActiveBoxes() {
+    activeBoxes.forEach(box => box.style.backgroundColor = '');
+    activeBoxes = [];
+}
+
+let activeBoxes = []; // Array to hold active boxes
+let boxAmount = 5; // Number of boxes to activate
+
+const topElement = document.querySelector('#top');
+topElement.addEventListener('click', (e) => {
+    if (e.target.style.backgroundColor === 'black') {
+        e.target.style.backgroundColor = '';
+        activeBoxes = activeBoxes.filter(box => box !== e.target);
+        initialComboScore++;
+        document.querySelector('#comboText h2').textContent = initialComboScore;
+        updateBackgroundColors(initialComboScore); // Update background colors on score change
+        if (activeBoxes.length < boxAmount) {
+            activateRandomBox();
+        }
+        startComboTimer(initialComboScore);
+    }
+});
+
+function activateRandomBox() {
+    const boxes = document.querySelectorAll('#top .box');
+    let boxActivated = false;
+    while (!boxActivated) {
+        const randomIndex = Math.floor(Math.random() * boxes.length);
+        if (!activeBoxes.includes(boxes[randomIndex]) && boxes[randomIndex].style.backgroundColor !== 'black') {
+            boxes[randomIndex].style.backgroundColor = 'black';
+            activeBoxes.push(boxes[randomIndex]);
+            boxActivated = true;
+        }
+    }
+}

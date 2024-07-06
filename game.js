@@ -1,21 +1,14 @@
 // Simulated CSV content as a string
 const csvContent = `min,max,top,bottom,timer
-0,19,#0000FF,#0000CC,6000
-20,39,#FF0000,#CC0000,5500
-40,59,#FFFF00,#CCCC00,5000
-60,79,#00FF00,#00CC00,4500
-80,99,#FFA500,#CC8400,4000
-100,119,#800080,#660066,3500
-120,139,#A52A2A,#802020,3000
-140,159,#FFC0CB,#CC8085,2500
-160,179,#ADD8E6,#87AFC1,2000
-180,199,#FF7F7F,#CC6666,1500
-200,219,#FFFFE0,#CCCCB3,1000
-220,239,#90EE90,#77CC77,500
-240,259,#FFD700,#CCA300,300
-260,279,#E6E6FA,#B3B3D9,200
-280,299,#CD853F,#A67A3E,100
-300,9999999,#FFFFFF,#CCCCCC,20`;
+0,9,#FFC0CB,#CC8085,4000
+10,24,#ADD8E6,#87AFC1,3000
+25,49,#FF7F7F,#CC6666,2000
+49,99,#FFFFE0,#CCCCB3,1500
+100,149,#90EE90,#77CC77,1000
+150,199,#FFD700,#CCA300,500
+300,349,#E6E6FA,#B3B3D9,300
+350,399,#CD853F,#A67A3E,200
+400,9999999,#FFFFFF,#CCCCCC,100`;
 
 const gameBoxWidth = 20; // Example width, adjust as needed
 const gameBoxHeight = 10; // Example height, adjust as needed
@@ -148,13 +141,14 @@ function initializeGame() {
 function activateRandomBoxes() {
     const boxes = document.querySelectorAll('#top .box');
 	const cols = gameBoxWidth;
-    clearActiveBoxes();
+    const rows = gameBoxHeight;
+	clearActiveBoxes();
     while (activeBoxes.length < boxAmount) {
 		let randi = Math.floor(Math.random() * boxes.length);
 		while (
-			randi >= 0 && randi <= gameBoxWidth ||
-			randi >= (gameBoxWidth * (gameBoxHeight - 1)) && randi <= (gameBoxWidth * gameBoxHeight - 1) ||
-			randi % gameBoxWidth === 0 || randi % gameBoxWidth === gameBoxWidth - 1 ||
+			randi >= 0 && randi <= cols ||
+			randi >= (cols * (rows - 1)) && randi <= (cols * rows - 1) ||
+			randi % cols === 0 || randi % cols === cols - 1 ||
 			(boxes[randi] && boxes[randi].style.backgroundColor === 'black') ||
 			(boxes[randi-1] && boxes[randi-1].style.backgroundColor === 'black') ||
 			(boxes[randi+1] && boxes[randi+1].style.backgroundColor === 'black') ||
@@ -218,7 +212,10 @@ function activateRandomBox() {
 				boxes[randi-1]?.style.backgroundColor === 'black' || // Use optional chaining to avoid undefined
 				boxes[randi+1]?.style.backgroundColor === 'black' ||
 				boxes[randi-cols]?.style.backgroundColor === 'black' ||
-				boxes[randi+cols]?.style.backgroundColor === 'black'
+				boxes[randi+cols]?.style.backgroundColor === 'black' ||
+				randi >= 0 && randi <= cols ||
+				randi >= (cols * (rows - 1)) && randi <= (cols * rows - 1) ||
+				randi % cols === 0 || randi % cols === cols - 1
 			)
 		) {
 			randi = Math.floor(Math.random() * boxes.length);

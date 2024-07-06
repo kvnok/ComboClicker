@@ -18,6 +18,27 @@ const csvContent = `min,max,top,bottom
 30,31,#FFB6C1,#CC8C99
 32,9999999,#FFFFFF,#CCCCCC`;
 
+const gameBoxWidth = 20; // Example width, adjust as needed
+const gameBoxHeight = 10; // Example height, adjust as needed
+
+function createGameGrid() {
+    const gridContainer = document.getElementById('top'); // Targeting the game area
+    gridContainer.innerHTML = ''; // Clear existing grid if any
+    const totalBoxes = gameBoxWidth * gameBoxHeight;
+
+    for (let i = 0; i < totalBoxes; i++) {
+        const box = document.createElement('div');
+        box.className = 'box';
+        gridContainer.appendChild(box);
+    }
+
+    // Adjust grid dimensions based on gameBoxWidth and gameBoxHeight
+    gridContainer.style.gridTemplateColumns = `repeat(${gameBoxWidth}, 1fr)`;
+    gridContainer.style.gridTemplateRows = `repeat(${gameBoxHeight}, 1fr)`;
+}
+
+createGameGrid();
+
 // Parse the CSV content
 const colorRanges = csvContent.split('\n').slice(1).map(line => {
     const [min, max, top, bottom] = line.split(',');
@@ -39,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	let boxAmount = 5; // Number of boxes to activate
 	// Initialize the game board
 	function initializeGame() {
-		for (let i = 0; i < 100; i++) { // Assuming a 10x10 grid
+		for (let i = 0; i < 100; i++) {
 			const box = document.createElement('div');
 			box.classList.add('box');
 			topElement.appendChild(box);
@@ -51,8 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	function activateRandomBoxes() {
 		const boxes = document.querySelectorAll('#top .box');
 		clearActiveBoxes(); // Clear current active boxes first
+		const gridWidth = 5; // Assuming a grid width of n boxes
+		const selectableBoxesCount = boxes.length - gridWidth; // Exclude the outer right column
+
 		while (activeBoxes.length < boxAmount) {
-			const randomIndex = Math.floor(Math.random() * boxes.length);
+			// Adjust randomIndex to exclude the outer right boxes
+			const randomIndex = Math.floor(Math.random() * selectableBoxesCount);
 			if (!activeBoxes.includes(boxes[randomIndex])) { // Ensure unique boxes are activated
 				boxes[randomIndex].style.backgroundColor = 'black';
 				activeBoxes.push(boxes[randomIndex]);

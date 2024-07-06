@@ -1,3 +1,38 @@
+// Simulated CSV content as a string
+const csvContent = `min,max,top,bottom
+0,49,#0000FF,#0000CC
+50,99,#FF0000,#CC0000
+99,149,#FFFF00,#CCCC00
+150,199,#00FF00,#00CC00
+200,249,#FFA500,#CC8400
+250,299,#800080,#660066
+300,349,#A52A2A,#802020
+350,399,#FFC0CB,#CC8085
+400,449,#ADD8E6,#87AFC1
+450,499,#FF7F7F,#CC6666
+500,549,#FFFFE0,#CCCCB3
+550,599,#90EE90,#77CC77
+600,649,#FFD700,#CCA300
+650,699,#E6E6FA,#B3B3D9
+700,749,#CD853F,#A67A3E
+750,799,#FFB6C1,#CC8C99
+800,9999999,#FFFFFF,#CCCCCC`;
+
+// Parse the CSV content
+const colorRanges = csvContent.split('\n').slice(1).map(line => {
+    const [min, max, top, bottom] = line.split(',');
+    return { min: parseInt(min, 10), max: parseInt(max, 10), top, bottom };
+});
+
+function updateBackgroundColors(comboScore) {
+    const currentRange = colorRanges.find(range => comboScore >= range.min && comboScore <= range.max);
+    
+    if (currentRange) {
+        document.querySelector('#top').style.backgroundColor = currentRange.top;
+        document.querySelector('#bottom').style.backgroundColor = currentRange.bottom;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const topElement = document.querySelector('#top');
 	let activeBoxes = []; // Now an array to hold two active boxes
@@ -41,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			clickCount++; // Step 2: Increment click counter
 			document.querySelector('#comboText h2').textContent = clickCount; // Step 3: Update comboText display
-
+			updateBackgroundColors(clickCount); // Step 4: Update background colors based on combo score
 			// Activate new box if less than two are active
 			if (activeBoxes.length < boxAmount) {
 				activateRandomBox();

@@ -1,21 +1,21 @@
 // Simulated CSV content as a string
 const csvContent = `min,max,top,bottom,timer
-0,9,#0000FF,#0000CC,6000
-10,19,#FF0000,#CC0000,5500
-20,29,#FFFF00,#CCCC00,5000
-30,39,#00FF00,#00CC00,4500
-40,49,#FFA500,#CC8400,4000
-50,59,#800080,#660066,3500
-60,69,#A52A2A,#802020,3000
-70,79,#FFC0CB,#CC8085,2500
-80,89,#ADD8E6,#87AFC1,2000
-90,99,#FF7F7F,#CC6666,1500
-100,109,#FFFFE0,#CCCCB3,1000
-110,119,#90EE90,#77CC77,500
-120,129,#FFD700,#CCA300,300
-130,139,#E6E6FA,#B3B3D9,200
-140,149,#CD853F,#A67A3E,100
-150,9999999,#FFFFFF,#CCCCCC,20`;
+0,19,#0000FF,#0000CC,6000
+20,39,#FF0000,#CC0000,5500
+40,59,#FFFF00,#CCCC00,5000
+60,79,#00FF00,#00CC00,4500
+80,99,#FFA500,#CC8400,4000
+100,119,#800080,#660066,3500
+120,139,#A52A2A,#802020,3000
+140,159,#FFC0CB,#CC8085,2500
+160,179,#ADD8E6,#87AFC1,2000
+180,199,#FF7F7F,#CC6666,1500
+200,219,#FFFFE0,#CCCCB3,1000
+220,239,#90EE90,#77CC77,500
+240,259,#FFD700,#CCA300,300
+260,279,#E6E6FA,#B3B3D9,200
+280,299,#CD853F,#A67A3E,100
+300,9999999,#FFFFFF,#CCCCCC,20`;
 
 const gameBoxWidth = 20; // Example width, adjust as needed
 const gameBoxHeight = 10; // Example height, adjust as needed
@@ -47,6 +47,15 @@ const colorRanges = csvContent.split('\n').slice(1).map(line => {
     return { min: parseInt(min, 10), max: parseInt(max, 10), top, bottom, totaltime };
 });
 
+function remove_old_active_boxes() {
+	for (let i = activeBoxes.length - 1; i >= 0; i--) {
+		if (activeBoxes[i].style.backgroundColor !== 'black') {
+			activeBoxes[i].style.backgroundColor = ''; // Reset background color
+			activeBoxes.splice(i, 1); // Remove element from array
+		}
+	}
+}
+
 function updateBackgroundColors(comboScore) {
     const currentRange = colorRanges.find(range => comboScore >= range.min && comboScore <= range.max);
     
@@ -54,6 +63,7 @@ function updateBackgroundColors(comboScore) {
         document.querySelector('#top').style.backgroundColor = currentRange.top;
         document.querySelector('#bottom').style.backgroundColor = currentRange.bottom;
     }
+	remove_old_active_boxes();
 }
 
 let lastFrameTime = null; // Track the last frame time for requestAnimationFrame
@@ -99,8 +109,9 @@ function startComboTimer(comboScore) {
 
         updateTimerDisplay(timeLeft);
         lastFrameTime = currentTime;
-
+		
         if (timeLeft > 0) {
+			remove_old_active_boxes();
             timerId = requestAnimationFrame(timerFrame);
         }
     }
@@ -139,21 +150,24 @@ function activateRandomBoxes() {
 	const cols = gameBoxWidth;
     clearActiveBoxes();
     while (activeBoxes.length < boxAmount) {
-        let randi = Math.floor(Math.random() * boxes.length);
-		while (randi >= 0 && randi <= gameBoxWidth ||
+		let randi = Math.floor(Math.random() * boxes.length);
+		while (
+			randi >= 0 && randi <= gameBoxWidth ||
 			randi >= (gameBoxWidth * (gameBoxHeight - 1)) && randi <= (gameBoxWidth * gameBoxHeight - 1) ||
 			randi % gameBoxWidth === 0 || randi % gameBoxWidth === gameBoxWidth - 1 ||
-			boxes[randi].style.backgroundColor === 'black'
-			|| boxes[randi-1].style.backgroundColor === 'black'
-			|| boxes[randi+1].style.backgroundColor === 'black'
-			|| boxes[randi-cols].style.backgroundColor === 'black'
-			|| boxes[randi+cols].style.backgroundColor === 'black'
+			(boxes[randi] && boxes[randi].style.backgroundColor === 'black') ||
+			(boxes[randi-1] && boxes[randi-1].style.backgroundColor === 'black') ||
+			(boxes[randi+1] && boxes[randi+1].style.backgroundColor === 'black') ||
+			(boxes[randi-cols] && boxes[randi-cols].style.backgroundColor === 'black') ||
+			(boxes[randi+cols] && boxes[randi+cols].style.backgroundColor === 'black')
 		) {
 			randi = Math.floor(Math.random() * boxes.length);
 		}
-		boxes[randi].style.backgroundColor = 'black';
-		activeBoxes.push(boxes[randi]);
-    }
+		if (boxes[randi]) { // Check if boxes[randi] is not undefined
+			boxes[randi].style.backgroundColor = 'black';
+			activeBoxes.push(boxes[randi]);
+		}
+	}
 }
 
 function clearActiveBoxes() {
@@ -172,6 +186,7 @@ topElement.addEventListener('click', (e) => {
         document.querySelector('#comboText h2').textContent = initialComboScore;
         updateBackgroundColors(initialComboScore); // Update background colors on score change
         if (activeBoxes.length < boxAmount) {
+			remove_old_active_boxes();
             activateRandomBox();
         }
         if (!gameStarted) {
@@ -182,25 +197,37 @@ topElement.addEventListener('click', (e) => {
 });
 
 function activateRandomBox() {
-    const boxes = document.querySelectorAll('#top .box');
-    const rows = gameBoxHeight;
-    const cols = gameBoxWidth
-    let boxActivated = false;
+	const boxes = document.querySelectorAll('#top .box');
+	if (boxes.length === 0) return; // Ensure there are boxes to activate
 
-    while (!boxActivated) {
-        const randomRow = Math.floor(Math.random() * (rows - 2)) + 1; // Avoid first and last row
-        const randomCol = Math.floor(Math.random() * (cols - 2)) + 1; // Avoid first and last column
-        const randi = randomRow * cols + randomCol;
-		while (boxes[randi].style.backgroundColor === 'black'
-			|| boxes[randi-1].style.backgroundColor === 'black'
-			|| boxes[randi+1].style.backgroundColor === 'black'
-			|| boxes[randi-cols].style.backgroundColor === 'black'
-			|| boxes[randi+cols].style.backgroundColor === 'black'
+	const rows = gameBoxHeight;
+	const cols = gameBoxWidth;
+	let boxActivated = false;
+
+	while (!boxActivated) {
+		remove_old_active_boxes();
+		const randomRow = Math.floor(Math.random() * (rows - 2)) + 1; // Avoid first and last row
+		const randomCol = Math.floor(Math.random() * (cols - 2)) + 1; // Avoid first and last column
+		let randi = randomRow * cols + randomCol;
+		// Ensure randi is within the bounds of the boxes array
+		randi = randi % boxes.length; 
+
+		while (
+			boxes[randi] && ( // Check if boxes[randi] is defined
+				boxes[randi].style.backgroundColor === 'black' ||
+				boxes[randi-1]?.style.backgroundColor === 'black' || // Use optional chaining to avoid undefined
+				boxes[randi+1]?.style.backgroundColor === 'black' ||
+				boxes[randi-cols]?.style.backgroundColor === 'black' ||
+				boxes[randi+cols]?.style.backgroundColor === 'black'
+			)
 		) {
 			randi = Math.floor(Math.random() * boxes.length);
 		}
-		boxes[randi].style.backgroundColor = 'black';
-		activeBoxes.push(boxes[randi]);
-		boxActivated = true;
-    }
+		if (boxes[randi]) { // Additional check to ensure boxes[randi] is defined
+			boxes[randi].style.backgroundColor = 'black';
+			activeBoxes.push(boxes[randi]);
+			boxActivated = true;
+		}
+	}
 }
+

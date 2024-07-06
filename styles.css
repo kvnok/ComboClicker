@@ -30,8 +30,8 @@ body {
 
 /* box */
 #top .box {
-    border: 1px transparent solid;
-	border-radius: 100%;
+    border: 3px transparent solid;
+	border-radius: 10%;
     /* background-color: #f0f0f0; */
 }
 

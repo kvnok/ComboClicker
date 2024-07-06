@@ -18,7 +18,7 @@ const csvContent = `min,max,top,bottom,timer
 750,799,#FFB6C1,#CC8C99,50
 800,9999999,#FFFFFF,#CCCCCC,20`;
 
-const gameBoxWidth = 30; // Example width, adjust as needed
+const gameBoxWidth = 20; // Example width, adjust as needed
 const gameBoxHeight = 10; // Example height, adjust as needed
 const totalBoxes = gameBoxWidth * gameBoxHeight;
 let initialComboScore = 0; // Initial combo score, adjust as needed

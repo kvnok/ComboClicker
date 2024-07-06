@@ -44,6 +44,13 @@ body {
 	grid-template-columns: repeat(100, 1fr);
 }
 
+/* info borders */
+#highscore, #comboText, #comboTimer {
+	border: 5px solid white;
+	border-radius: 5%;
+	text-align: center;
+}
+
 /* highscore */
 #highscore {
 	background-color: red;

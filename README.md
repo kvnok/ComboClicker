@@ -10,4 +10,4 @@ ComboClicker is an engaging game where your goal is to achieve the highest conse
 - Try to beat your high score and discover all the available color combos!
 
 # [**Play ComboClicker**](https://kvnok.github.io/ComboClicker/)
-![ComboClicker Gameplay](https://i.imgur.com/5X6Hswn.gif)
+![](https://i.imgur.com/5X6Hswn.gif)

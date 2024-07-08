@@ -180,6 +180,8 @@ function clearActiveBoxes() {
 const topElement = document.querySelector('#top');
 topElement.addEventListener('mousedown', (e) => {
     if (e.target.style.backgroundColor === 'black') {
+        const clickSound = new Audio('tap.wav');
+        clickSound.play();
 		const currentRange = colorRanges.find(range => initialComboScore >= range.min && initialComboScore <= range.max);
 		timeLeft = parseInt(currentRange.totaltime, 10); // Reset the timer
         e.target.style.backgroundColor = '';

@@ -170,7 +170,7 @@ function clearActiveBoxes() {
 }
 
 const topElement = document.querySelector('#top');
-topElement.addEventListener('click', (e) => {
+topElement.addEventListener('mousedown', (e) => {
     if (e.target.style.backgroundColor === 'black') {
 		const currentRange = colorRanges.find(range => initialComboScore >= range.min && initialComboScore <= range.max);
 		timeLeft = parseInt(currentRange.totaltime, 10); // Reset the timer
